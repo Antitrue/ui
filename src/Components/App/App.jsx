@@ -7,7 +7,6 @@ import Footer from '../Footer/Footer'
 import data from '../../data/data'
 import './App.css'
 
-
 function App() {
   const [tasks, setTasks] = useState(data)
   const [filteredTasks, setFilteredTasks] = useState(tasks)
