@@ -6,7 +6,8 @@ import NewTaskForm from '../NewTaskForm/NewTaskForm'
 import Footer from '../Footer/Footer'
 import data from '../../data/data'
 import './App.css'
-var a = 1
+
+
 function App() {
   const [tasks, setTasks] = useState(data)
   const [filteredTasks, setFilteredTasks] = useState(tasks)
