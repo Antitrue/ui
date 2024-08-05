@@ -5,6 +5,7 @@ import TaskList from '../TaskList/TaskList'
 import NewTaskForm from '../NewTaskForm/NewTaskForm'
 import Footer from '../Footer/Footer'
 import data from '../../data/data'
+
 import './App.css'
 
 function App() {
