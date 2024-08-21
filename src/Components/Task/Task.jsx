@@ -1,8 +1,23 @@
 import React, { useRef, useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+
+import Timer from '../Timer/Timer'
 import './Task.css'
 
-function Task({ description, createdAt, edit, done, onDone, id, removeTask, changeTask, onSubmitTask }) {
+function Task({
+  description,
+  createdAt,
+  edit,
+  done,
+  onDone,
+  id,
+  removeTask,
+  changeTask,
+  onSubmitTask,
+  onPauseTimer,
+  onPlayTimer,
+  timeInSec,
+}) {
   const [text, setText] = useState(description)
   const [flag, setFlag] = useState(false)
   const inpRef = useRef()
@@ -31,8 +46,9 @@ function Task({ description, createdAt, edit, done, onDone, id, removeTask, chan
           checked={done}
         />
         <label>
-          <span className="description">{description}</span>
-          <span className="created">{`created ${formatDistanceToNow(createdAt, { includeSeconds: true })} ago`}</span>
+          <span className="title">{description}</span>
+          <Timer timeInSec={timeInSec} onPlayTimer={onPlayTimer} onPauseTimer={onPauseTimer} id={id} done={done} />
+          <span className="description">{`created ${formatDistanceToNow(createdAt, { includeSeconds: true })} ago`}</span>
         </label>
         <button
           className="icon icon-edit"

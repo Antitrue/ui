@@ -4,7 +4,17 @@ import Task from '../Task/Task'
 
 import './TaskList.css'
 
-function TaskList({ taskData, onDone, removeTask, flag, completedTask, changeTask, onSubmitTask }) {
+function TaskList({
+  taskData,
+  onDone,
+  removeTask,
+  flag,
+  completedTask,
+  changeTask,
+  onSubmitTask,
+  onPlayTimer,
+  onPauseTimer,
+}) {
   const renderList = (flag) => {
     if (flag === 'Completed') {
       return completedTask
@@ -13,7 +23,7 @@ function TaskList({ taskData, onDone, removeTask, flag, completedTask, changeTas
   }
   return (
     <ul className="todo-list">
-      {renderList(flag).map(({ description, createdAt, className, id, edit, done }) => (
+      {renderList(flag).map(({ description, createdAt, className, id, edit, done, timeInSec }) => (
         <li key={id} className={done ? 'completed' : className}>
           <Task
             id={id}
@@ -26,6 +36,9 @@ function TaskList({ taskData, onDone, removeTask, flag, completedTask, changeTas
             taskData={taskData}
             changeTask={changeTask}
             onSubmitTask={onSubmitTask}
+            onPlayTimer={onPlayTimer}
+            onPauseTimer={onPauseTimer}
+            timeInSec={timeInSec}
           />
         </li>
       ))}

@@ -24,6 +24,7 @@ function App() {
       const newState = state.map((item) => {
         if (item.id === id) {
           item.done = !item.done
+          clearInterval(item.timerId)
         }
         if (item.className === 'completed') item.className = null
         return item
@@ -44,6 +45,7 @@ function App() {
           item.edit = true
           item.className = 'editing'
           item.done = false
+          onPauseTimer(id)
         }
         return item
       })
@@ -65,12 +67,17 @@ function App() {
 
   const removeTask = (id) => {
     setTasks((state) => {
-      const newState = state.filter((item) => item.id !== id)
+      const newState = state.filter((item) => {
+        if (item.id !== id) {
+          return item
+        }
+        clearInterval(item.timerId)
+      })
       return newState
     })
   }
 
-  const addTask = (description, event, setValue) => {
+  const addTask = (description, timeInSec, event) => {
     event.preventDefault()
     if (description.trim() !== '') {
       setTasks((state) => [
@@ -81,11 +88,11 @@ function App() {
           className: null,
           edit: false,
           done: false,
+          timeInSec,
           id: uuid(),
         },
       ])
     }
-    setValue('')
   }
 
   const filterItems = (filter) => {
@@ -112,6 +119,46 @@ function App() {
     setFlag(value)
   }
 
+  const tick = (id) => {
+    setFilteredTasks((prevState) =>
+      prevState.map((todo) => {
+        if (todo.id === id) {
+          todo.timerStarted = true
+          todo.timeInSec -= 1
+        }
+        return todo
+      })
+    )
+  }
+
+  const onPlayTimer = (id) => {
+    setFilteredTasks((prevState) =>
+      prevState.map((todo) => {
+        if (todo.timerStarted) {
+          clearInterval(todo.timerId)
+        }
+        if (todo.id === id) {
+          const newTimer = setInterval(() => tick(id), 1000)
+          todo.timerId = newTimer
+        }
+        return todo
+      })
+    )
+  }
+
+  const onPauseTimer = (id) => {
+    setFilteredTasks((prevState) =>
+      prevState.map((todo) => {
+        if (todo.id === id) {
+          clearInterval(todo.timerId)
+          todo.timerId = null
+          todo.timerStarted = false
+        }
+        return todo
+      })
+    )
+  }
+
   const doneCount = tasks.filter((item) => item.done)
   const inProgressCount = tasks.length - doneCount.length
 
@@ -130,6 +177,8 @@ function App() {
           completedTask={completedTask}
           changeTask={changeTask}
           onSubmitTask={onSubmitTask}
+          onPlayTimer={onPlayTimer}
+          onPauseTimer={onPauseTimer}
         />
         <Footer
           filterItems={filterItems}
